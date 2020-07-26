@@ -1,11 +1,8 @@
-import {
-  init as initResources,
-  ResourceData,
-  ResourceDefinition,
-} from "../game/Resources";
+import { init as initResources, ResourceData } from "../game/Resources";
 import { init as initRecipes } from "../game/Recipes";
 import { init as initEvents } from "../game/Events";
 import * as Actions from "./Actions";
+import ResourceDefinitions from "../game/ResourceDefinitions";
 
 export function initialState() {
   return {
@@ -16,11 +13,7 @@ export function initialState() {
   };
 }
 
-function commitAdds(
-  resourceData: ResourceData,
-  resourceDefinitions: Map<string, ResourceDefinition>,
-  adds: [[string, number]]
-) {
+function commitAdds(resourceData: ResourceData, adds: [[string, number]]) {
   const newResourceData = new Map<string, number>(resourceData);
   adds.forEach(([name, value]: [string, number]) => {
     let set;
@@ -30,7 +23,7 @@ function commitAdds(
       set = value;
     }
 
-    const definition = resourceDefinitions.get(name)!;
+    const definition = ResourceDefinitions.get(name)!;
     if (definition.maximum < 0) {
       newResourceData.set(name, set);
     } else {
@@ -50,20 +43,12 @@ export function reducers(state = initialState(), action: Actions.Action) {
     case Actions.SET_MULTIPLE_RESOURCES:
       return {
         ...state,
-        resourceData: commitAdds(
-          state.resourceData,
-          state.resourceDefinitions,
-          action.adds
-        ),
+        resourceData: commitAdds(state.resourceData, action.adds),
       };
     case Actions.ACCUMULATE:
       return {
         ...state,
-        resourceData: commitAdds(
-          state.resourceData,
-          state.resourceDefinitions,
-          action.adds
-        ),
+        resourceData: commitAdds(state.resourceData, action.adds),
         lastAccumulate: action.lastAccumulate,
       };
     case Actions.PUT_LOG:

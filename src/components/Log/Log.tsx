@@ -6,7 +6,7 @@ import { LogContainer, LogMessage } from "./styled";
 const Log = ({ log }: { log: string[] }) => {
   return (
     <LogContainer>
-      {log.slice(-6).map((message) => {
+      {log.slice(-6).map((message, index) => {
         return <LogMessage key={message}>{message}</LogMessage>;
       })}
     </LogContainer>

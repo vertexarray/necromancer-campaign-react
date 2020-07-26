@@ -13,18 +13,22 @@ export const OrdersColumn = styled.div`
 `;
 
 export const OrderButton = styled.button`
-  background-color: grey;
+  background-color: ${(props) => props.theme.buttonBackground};
   border-radius: 3px;
   display: inline-block;
   cursor: pointer;
-  color: #ffffff;
+  color: ${(props) => props.theme.buttonText};
   font-size: 15px;
   padding: 9px 23px;
   &:hover {
-    background-color: #grey;
+    background-color: ${(props) => props.theme.buttonHover};
   }
   &:active {
     position: relative;
     top: 1px;
+  }
+  &:disabled {
+    background-color: black;
+    cursor: default;
   }
 `;

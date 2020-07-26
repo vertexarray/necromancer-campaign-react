@@ -1,5 +1,5 @@
 import React from "react";
-import { tryRecipe } from "../../game/Resources";
+import { tryRecipe, have } from "../../game/Resources";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { Recipe } from "../../game/Recipes";
@@ -87,9 +87,11 @@ const Orders = ({
         )}
         {unlocks.get("skeletons") && (
           <OrderButton
+            disabled={!have("skeletons", 1)}
             onClick={() => {
               const skeletonCount = resourceData.get("skeletons")!;
               unlock("unwilling sacrifices");
+              unlock("gold");
               addMany([
                 [
                   "corpses",
@@ -99,6 +101,7 @@ const Orders = ({
                   "unwilling sacrifices",
                   Math.round(skeletonCount / 7 + Math.random() * 4),
                 ],
+                ["gold", Math.round(skeletonCount * 30 * Math.random())],
                 ["skeletons", -Math.round(Math.random() * skeletonCount)],
               ]);
             }}

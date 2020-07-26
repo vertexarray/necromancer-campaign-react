@@ -2,23 +2,23 @@ import { have } from "./Resources";
 import { store } from "../App";
 import { PUT_LOG, Action, UNLOCK } from "../reducers/Actions";
 
-var events: Event[];
+const  events = defineEvents();
 export function init() {
-  events = defineEvents().map((event) => {
-    return [...event, false];
-  }) as Event[];
   return {
     log: new Array<String>(),
+    eventStatus: new Map<string, boolean>()
   };
 }
 
-export type Event =
-  | [string, Function, Function]
-  | [string, Function, Function, boolean];
+export type Event = [string, Function, Function]
+
+export type EventStatus = Map<string, boolean>;
 
 export function checkEvents() {
   let results = new Array<Action>();
-  events = events.map(([name, trigger, result, triggered]) => {
+  const eventStatus = store.getState().eventStatus
+    events.forEach(([name, trigger, result]) => {
+    const triggered = eventStatus.get(name);
     if (!triggered && trigger() === true) {
       const actions = result();
       if (Array.isArray(actions)) {
@@ -26,10 +26,9 @@ export function checkEvents() {
       } else {
         results.push(actions);
       }
-      return [name, trigger, result, true];
+      eventStatus.set(name, true);
     }
-    return [name, trigger, result, triggered];
-  }) as Event[];
+  })
   results.forEach((result) => {
     store.dispatch(result);
   });

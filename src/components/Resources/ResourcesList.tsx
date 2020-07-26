@@ -4,18 +4,15 @@ import { ResourceDefinition } from "../../game/Resources";
 import Resource from "./Resource/Resource";
 import { ResourcesContainer } from "./styled";
 import { RootState } from "../../reducers/Reducers";
+import ResourceDefinitions from "../../game/ResourceDefinitions";
 
-const ResourcesList = ({
-  resourceDefinitions,
-  resourceData,
-  unlocks,
-}: ResourcesListProps) => {
+const ResourcesList = ({ resourceData, unlocks }: ResourcesListProps) => {
   return (
     <ResourcesContainer>
-      {Array.from<ResourceDefinition>(resourceDefinitions.values()).map(
+      {Array.from<ResourceDefinition>(ResourceDefinitions.values()).map(
         (value: ResourceDefinition) => {
           if (!unlocks.get(value.name)) {
-            return <></>;
+            return <div key={value.name} />;
           }
           const count = resourceData.get(value.name);
           return (
@@ -33,7 +30,6 @@ const ResourcesList = ({
 
 const mapStateToProps = (state: RootState) => {
   return {
-    resourceDefinitions: state.resourceDefinitions,
     resourceData: state.resourceData,
     unlocks: state.unlocks,
   };
