@@ -2,22 +2,22 @@ import { have } from "./Resources";
 import { store } from "../App";
 import { PUT_LOG, Action, UNLOCK } from "../reducers/Actions";
 
-const  events = defineEvents();
+const events = defineEvents();
 export function init() {
   return {
     log: new Array<String>(),
-    eventStatus: new Map<string, boolean>()
+    eventStatus: new Map<string, boolean>(),
   };
 }
 
-export type Event = [string, Function, Function]
+export type Event = [string, Function, Function];
 
 export type EventStatus = Map<string, boolean>;
 
 export function checkEvents() {
   let results = new Array<Action>();
-  const eventStatus = store.getState().eventStatus
-    events.forEach(([name, trigger, result]) => {
+  const eventStatus = store.getState().eventStatus;
+  events.forEach(([name, trigger, result]) => {
     const triggered = eventStatus.get(name);
     if (!triggered && trigger() === true) {
       const actions = result();
@@ -28,7 +28,7 @@ export function checkEvents() {
       }
       eventStatus.set(name, true);
     }
-  })
+  });
   results.forEach((result) => {
     store.dispatch(result);
   });
@@ -142,6 +142,36 @@ function defineEvents(): Event[] {
           {
             type: PUT_LOG,
             text: "Grim marionettes.",
+          },
+        ];
+      },
+    ],
+    [
+      "200Gold",
+      () => have("gold", 200),
+      () => {
+        return [
+          {
+            type: UNLOCK,
+            unlock: "graverobbers",
+          },
+          {
+            type: PUT_LOG,
+            text:
+              "Stealing corpses from their graves is a time-honored tradition among both servants of the living and masters of the dead.",
+          },
+        ];
+      },
+    ],
+    [
+      "2km2",
+      () => have("km2", 2),
+      () => {
+        return [
+          {
+            type: PUT_LOG,
+            text:
+              "The living will mount a more desperate resistance for every inch of their territory you claim.",
           },
         ];
       },

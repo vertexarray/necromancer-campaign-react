@@ -1,25 +1,30 @@
 import React from "react";
-import { ResourceDefinition } from "../../../game/Resources";
+import { ResourceDefinition, ResourceData } from "../../../game/Resources";
 import { ResourceContainer, FullResourceContainer } from "./styled";
 
 type ResourceProps = {
   definition: ResourceDefinition;
   amount: number;
+  resourceData: ResourceData;
 };
 
-const Resource = ({ definition, amount }: ResourceProps) => {
+const Resource = ({ definition, amount, resourceData }: ResourceProps) => {
+  const maximum =
+    typeof definition.maximum == "function"
+      ? definition.maximum(resourceData)
+      : definition.maximum;
   let text =
-    definition.maximum < 0 ? (
+    maximum < 0 ? (
       <>
         {definition.displayName}: {amount}
       </>
     ) : (
       <>
-        {definition.displayName}: {amount}/{definition.maximum}
+        {definition.displayName}: {amount}/{Math.round(maximum * 100) / 100}
       </>
     );
 
-  if (amount >= definition.maximum) {
+  if (amount >= maximum) {
     return <FullResourceContainer>{text}</FullResourceContainer>;
   } else {
     return <ResourceContainer>{text}</ResourceContainer>;

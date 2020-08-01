@@ -24,10 +24,14 @@ function commitAdds(resourceData: ResourceData, adds: [[string, number]]) {
     }
 
     const definition = ResourceDefinitions.get(name)!;
-    if (definition.maximum < 0) {
+    const maximum =
+      typeof definition.maximum == "function"
+        ? definition.maximum(resourceData)
+        : definition.maximum;
+    if (maximum < 0) {
       newResourceData.set(name, set);
     } else {
-      newResourceData.set(name, Math.min(set, definition.maximum));
+      newResourceData.set(name, Math.min(set, maximum));
     }
   });
   return newResourceData;

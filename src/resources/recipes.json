@@ -34,5 +34,14 @@
       ],
       "result": [["skeletons", 1]]
     }
+  ],
+  [
+    "hire graverobber",
+    {
+      "cost": [
+        ["gold", 10]
+      ],
+      "result": [["graverobbers", 1]]
+    }
   ]
 ]

@@ -1,5 +1,5 @@
 import React from "react";
-import { tryRecipe, have } from "../../game/Resources";
+import { tryRecipe } from "../../game/Resources";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { Recipe } from "../../game/Recipes";
@@ -9,106 +9,20 @@ import {
   PUT_LOG,
   SET_MULTIPLE_RESOURCES,
 } from "../../reducers/Actions";
-import { OrderButton, OrdersContainer, OrdersColumn } from "./styled";
+import { OrdersContainer, OrdersColumn } from "./styled";
+import Intro from "./OrderGroups/Intro";
+import Magic from "./OrderGroups/Magic";
+import Warfare from "./OrderGroups/Warfare";
 
-const Orders = ({
-  tryR,
-  unlock,
-  putLog,
-  addMany,
-  recipes,
-  resourceData,
-  unlocks,
-}: OrdersProps) => {
-  const bodyParts = resourceData.get("body parts");
-  const getBodyPart =
-    bodyParts && bodyParts >= 7 ? (
-      <OrderButton
-        onClick={() => {
-          unlock("corpses");
-          unlock("body parts", "lock");
-          putLog(
-            "A suitable vessel, for now. Countless ancient corpses call to you from below."
-          );
-        }}
-      >
-        Become whole again
-      </OrderButton>
-    ) : (
-      <OrderButton
-        onClick={() => {
-          tryR(recipes.get("body part")!);
-        }}
-      >
-        Scrounge for body part
-      </OrderButton>
-    );
+const Orders = (props: OrdersProps) => {
   return (
     <OrdersContainer>
       <OrdersColumn>
-        {!unlocks.get("corpses") && getBodyPart}
-        {unlocks.get("corpses") && (
-          <OrderButton
-            onClick={() => {
-              tryR(recipes.get("corpse")!);
-            }}
-          >
-            Unearth Corpse
-          </OrderButton>
-        )}
-        {unlocks.get("talismans") && (
-          <OrderButton
-            onClick={() => {
-              tryR(recipes.get("talisman")!);
-            }}
-          >
-            Make Talisman
-          </OrderButton>
-        )}
-        {unlocks.get("skeletons") && (
-          <OrderButton
-            onClick={() => {
-              tryR(recipes.get("skeletons")!);
-            }}
-          >
-            Animate Skeleton
-          </OrderButton>
-        )}
+        <Intro {...props} />
+        <Magic {...props} />
       </OrdersColumn>
       <OrdersColumn>
-        {unlocks.get("kill with magic") && (
-          <OrderButton
-            onClick={() => {
-              tryR(recipes.get("kill with magic")!);
-            }}
-          >
-            Kill with magic
-          </OrderButton>
-        )}
-        {unlocks.get("skeletons") && (
-          <OrderButton
-            disabled={!have("skeletons", 1)}
-            onClick={() => {
-              const skeletonCount = resourceData.get("skeletons")!;
-              unlock("unwilling sacrifices");
-              unlock("gold");
-              addMany([
-                [
-                  "corpses",
-                  (skeletonCount + Math.round(Math.random() * 8)) * 2,
-                ],
-                [
-                  "unwilling sacrifices",
-                  Math.round(skeletonCount / 7 + Math.random() * 4),
-                ],
-                ["gold", Math.round(skeletonCount * 30 * Math.random())],
-                ["skeletons", -Math.round(Math.random() * skeletonCount)],
-              ]);
-            }}
-          >
-            Dispatch raiding party
-          </OrderButton>
-        )}
+        <Warfare {...props} />
       </OrdersColumn>
     </OrdersContainer>
   );
@@ -139,6 +53,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
-type OrdersProps = ConnectedProps<typeof connector>;
+export type OrdersProps = ConnectedProps<typeof connector>;
 
 export default connector(Orders);

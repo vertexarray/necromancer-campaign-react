@@ -17,7 +17,7 @@ export type ResourceDefinition = {
   name: string;
   displayName: string;
   accumulator?: Function;
-  maximum: number;
+  maximum: number | Function;
 };
 
 export type ResourceData = Map<string, number>;

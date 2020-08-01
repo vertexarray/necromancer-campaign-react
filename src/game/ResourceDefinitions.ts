@@ -1,4 +1,4 @@
-import { ResourceDefinition, get } from "./Resources";
+import { ResourceDefinition, get, ResourceData } from "./Resources";
 
 const ResourceDefinitions = new Map<string, ResourceDefinition>([
   [
@@ -17,7 +17,9 @@ const ResourceDefinitions = new Map<string, ResourceDefinition>([
       accumulator: (time: number) => {
         return (time * get("talismans")) / 15;
       },
-      maximum: 10,
+      maximum: (rd: ResourceData) => {
+        return 10 + Math.sqrt(rd.get("unwilling sacrifices")!);
+      },
     },
   ],
   [
@@ -25,7 +27,13 @@ const ResourceDefinitions = new Map<string, ResourceDefinition>([
     {
       name: "talismans",
       displayName: "Talismans",
-      maximum: 20,
+      maximum: (rd: ResourceData) => {
+        if (rd.get("km2")) {
+          return rd.get("km2")! * 20;
+        } else {
+          return 20;
+        }
+      },
     },
   ],
   [
@@ -34,6 +42,11 @@ const ResourceDefinitions = new Map<string, ResourceDefinition>([
       name: "corpses",
       displayName: "Corpses",
       maximum: 50,
+      accumulator: (time: number) => {
+        return Math.round(
+          Math.max(Math.sqrt(get("graverobbers")) * Math.random(), 0)
+        );
+      },
     },
   ],
   [
@@ -41,7 +54,9 @@ const ResourceDefinitions = new Map<string, ResourceDefinition>([
     {
       name: "skeletons",
       displayName: "Skeletons",
-      maximum: 5,
+      maximum: (rd: ResourceData) => {
+        return rd.get("km2")! * 5;
+      },
     },
   ],
   [
@@ -58,6 +73,22 @@ const ResourceDefinitions = new Map<string, ResourceDefinition>([
       name: "gold",
       displayName: "Gold",
       maximum: 400,
+    },
+  ],
+  [
+    "graverobbers",
+    {
+      name: "graverobbers",
+      displayName: "Graverobbers",
+      maximum: -1,
+    },
+  ],
+  [
+    "km2",
+    {
+      name: "km2",
+      displayName: "Square Kilometers",
+      maximum: -1,
     },
   ],
 ]);

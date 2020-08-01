@@ -19,6 +19,7 @@ const ResourcesList = ({ resourceData, unlocks }: ResourcesListProps) => {
             <Resource
               definition={value}
               amount={count ? Math.round(count * 100) / 100 : 0}
+              resourceData={resourceData}
               key={value.name}
             />
           );
