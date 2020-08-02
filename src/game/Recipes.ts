@@ -1,8 +1,8 @@
-import recipes from "../resources/recipes.json";
+import RecipeDefinitions from "./RecipeDefinitions";
 
 export type Recipe = {
-  cost?: [[string, number]];
-  result?: [[string, number]];
+  cost?: Array<[string, number]> | (() => Array<[string, number]>);
+  result?: Array<[string, number]> | (() => Array<[string, number]>);
 };
 
 var recipeDefinitions: Map<string, Recipe>;
@@ -10,7 +10,7 @@ var recipeDefinitions: Map<string, Recipe>;
 export function init() {
   return {
     recipeDefinitions: new Map<string, Recipe>(
-      recipes as Iterable<readonly [string, Recipe]>
+      RecipeDefinitions as Iterable<readonly [string, Recipe]>
     ),
   };
 }

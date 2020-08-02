@@ -16,15 +16,19 @@ import ResourceDefinitions from "./ResourceDefinitions";
 export type ResourceDefinition = {
   name: string;
   displayName: string;
-  accumulator?: Function;
-  maximum: number | Function;
+  accumulator?: (time: number) => number;
+  maximum: number | ((rd: ResourceData) => number);
 };
 
 export type ResourceData = Map<string, number>;
 
 export function init() {
   return {
-    resourceData: new Map<string, number>(),
+    resourceData: new Map<string, number>(
+      Array.from(ResourceDefinitions.keys()).map((key: string) => {
+        return [key, 0];
+      })
+    ),
     lastAccumulate: moment.now(),
   };
 }
@@ -97,20 +101,30 @@ export function accumulate(): Accumulate {
   return { type: ACCUMULATE, adds, lastAccumulate: currentTime };
 }
 
+function mapRecipeCost([resource, value]: [string, number]) {
+  return [resource, -value];
+}
+
+function mapRecipeResult([resource, value]: [string, number]) {
+  return [resource, value];
+}
+
 export function tryRecipe(recipe: Recipe): SetMultipleResources | Noop {
   if (checkRecipeRequirements(recipe)) {
     return {
       type: SET_MULTIPLE_RESOURCES,
       adds: [
         ...(recipe.cost
-          ? recipe.cost.map(([resource, value]) => {
-              return [resource, -value];
-            })
+          ? (typeof recipe.cost === "function"
+              ? recipe.cost()
+              : recipe.cost
+            ).map(mapRecipeCost)
           : []),
         ...(recipe.result
-          ? recipe.result.map(([resource, value]) => {
-              return [resource, value];
-            })
+          ? (typeof recipe.result === "function"
+              ? recipe.result()
+              : recipe.result
+            ).map(mapRecipeResult)
           : []),
       ] as [[string, number]],
     };
@@ -122,6 +136,9 @@ export function tryRecipe(recipe: Recipe): SetMultipleResources | Noop {
 export function checkRecipeRequirements(recipe: Recipe): boolean {
   return (
     !recipe.cost ||
-    recipe.cost.every(([ingredient, cost]) => have(ingredient, cost))
+    (typeof recipe.cost === "function"
+      ? recipe.cost()
+      : recipe.cost
+    ).every(([ingredient, cost]) => have(ingredient, cost))
   );
 }

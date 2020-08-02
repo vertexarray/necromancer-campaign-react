@@ -1,15 +1,9 @@
 import { OrdersProps } from "../Orders";
 import { OrderButton } from "../styled";
 import React from "react";
+import RecipeButton from "../RecipeButton";
 
-const Intro = ({
-  tryR,
-  unlock,
-  putLog,
-  recipes,
-  resourceData,
-  unlocks,
-}: OrdersProps) => {
+const Intro = ({ unlock, putLog, resourceData, unlocks }: OrdersProps) => {
   const bodyParts = resourceData.get("body parts");
   if (unlocks.get("corpses")) {
     return null;
@@ -27,13 +21,7 @@ const Intro = ({
       Become whole again
     </OrderButton>
   ) : (
-    <OrderButton
-      onClick={() => {
-        tryR(recipes.get("body part")!);
-      }}
-    >
-      Scrounge for body part
-    </OrderButton>
+    <RecipeButton recipe="body part">Scrounge for body part</RecipeButton>
   );
 };
 

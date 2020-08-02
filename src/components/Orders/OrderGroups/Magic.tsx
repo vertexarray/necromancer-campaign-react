@@ -1,36 +1,21 @@
 import { OrdersProps } from "../Orders";
-import { OrderButton } from "../styled";
 import React from "react";
+import RecipeButton from "../RecipeButton";
 
-const Magic = ({ tryR, recipes, unlocks }: OrdersProps) => {
+const Magic = ({ unlocks }: OrdersProps) => {
   return (
     <>
       {unlocks.get("corpses") && (
-        <OrderButton
-          onClick={() => {
-            tryR(recipes.get("corpse")!);
-          }}
-        >
-          Unearth Corpse
-        </OrderButton>
+        <RecipeButton recipe="corpse">Unearth Corpse</RecipeButton>
       )}
       {unlocks.get("talismans") && (
-        <OrderButton
-          onClick={() => {
-            tryR(recipes.get("talisman")!);
-          }}
-        >
-          Make Talisman
-        </OrderButton>
+        <RecipeButton recipe="talisman">Make Talisman</RecipeButton>
       )}
       {unlocks.get("skeletons") && (
-        <OrderButton
-          onClick={() => {
-            tryR(recipes.get("skeletons")!);
-          }}
-        >
-          Animate Skeleton
-        </OrderButton>
+        <RecipeButton recipe="skeletons">Animate Skeleton</RecipeButton>
+      )}
+      {unlocks.get("apprentices") && (
+        <RecipeButton recipe="hire apprentice">Hire apprentice</RecipeButton>
       )}
     </>
   );

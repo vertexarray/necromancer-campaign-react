@@ -169,9 +169,13 @@ function defineEvents(): Event[] {
       () => {
         return [
           {
+            type: UNLOCK,
+            unlock: "apprentices"
+          },
+          {
             type: PUT_LOG,
             text:
-              "The living will mount a more desperate resistance for every inch of their territory you claim.",
+              "The living will mount a more desperate resistance for every inch of their territory you claim. ",
           },
         ];
       },
