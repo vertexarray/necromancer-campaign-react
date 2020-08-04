@@ -7,7 +7,11 @@ const Log = ({ log }: { log: string[] }) => {
   return (
     <LogContainer>
       {log.slice(-6).map((message, index) => {
-        return <LogMessage key={message}>{message}</LogMessage>;
+        return (
+          <LogMessage style={{ opacity: index / 6 }} key={message}>
+            {message}
+          </LogMessage>
+        );
       })}
     </LogContainer>
   );

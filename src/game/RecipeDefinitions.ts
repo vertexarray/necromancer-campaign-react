@@ -31,7 +31,7 @@ const RecipeDefinitions: Map<string, Recipe> = new Map<string, Recipe>([
     "skeletons",
     {
       cost: [
-        ["mana", 1],
+        ["mana", 10],
         ["corpses", 1],
       ],
       result: [["skeletons", 1]],
@@ -49,6 +49,13 @@ const RecipeDefinitions: Map<string, Recipe> = new Map<string, Recipe>([
     {
       cost: [["gold", 250]],
       result: [["apprentices", 1]],
+    },
+  ],
+  [
+    "animate deacon",
+    {
+      cost: [["mana", 20]],
+      result: [["deacons", 1]],
     },
   ],
 ]);

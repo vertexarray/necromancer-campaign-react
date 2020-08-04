@@ -30,7 +30,6 @@ const Orders = (props: OrdersProps) => {
 
 const mapStateToProps = (state: RootState) => {
   return {
-    recipes: state.recipeDefinitions,
     resourceData: state.resourceData,
     unlocks: state.unlocks,
   };

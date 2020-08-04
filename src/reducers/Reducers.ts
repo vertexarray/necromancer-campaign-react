@@ -1,5 +1,4 @@
 import { init as initResources, ResourceData } from "../game/Resources";
-import { init as initRecipes } from "../game/Recipes";
 import { init as initEvents } from "../game/Events";
 import * as Actions from "./Actions";
 import ResourceDefinitions from "../game/ResourceDefinitions";
@@ -7,7 +6,6 @@ import ResourceDefinitions from "../game/ResourceDefinitions";
 export function initialState() {
   return {
     ...initResources(),
-    ...initRecipes(),
     ...initEvents(),
     unlocks: new Map<string, boolean>([["body parts", true]]),
   };

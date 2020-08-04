@@ -170,12 +170,29 @@ function defineEvents(): Event[] {
         return [
           {
             type: UNLOCK,
-            unlock: "apprentices"
+            unlock: "apprentices",
           },
           {
             type: PUT_LOG,
             text:
-              "The living will mount a more desperate resistance for every inch of their territory you claim. ",
+              "The living will mount a more desperate resistance for every inch of their territory you claim.",
+          },
+        ];
+      },
+    ],
+    [
+      "4apprentices",
+      () => have("apprentices", 4),
+      () => {
+        return [
+          {
+            type: UNLOCK,
+            unlock: "deacons",
+          },
+          {
+            type: PUT_LOG,
+            text:
+              "An undead diaconate assists apprentices in their labour and settles their petty squabbles. They are incapable of accumulating or channeling mana, but understand very well the needs of a necromancer.",
           },
         ];
       },

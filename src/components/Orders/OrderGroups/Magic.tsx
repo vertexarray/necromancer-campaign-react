@@ -15,7 +15,10 @@ const Magic = ({ unlocks }: OrdersProps) => {
         <RecipeButton recipe="skeletons">Animate Skeleton</RecipeButton>
       )}
       {unlocks.get("apprentices") && (
-        <RecipeButton recipe="hire apprentice">Hire apprentice</RecipeButton>
+        <RecipeButton recipe="hire apprentice">Hire Apprentice</RecipeButton>
+      )}
+      {unlocks.get("deacons") && (
+        <RecipeButton recipe="animate deacon">Animate Deacon</RecipeButton>
       )}
     </>
   );

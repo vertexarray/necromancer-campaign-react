@@ -58,6 +58,9 @@ const ResourceDefinitions: Map<string, ResourceDefinition> = new Map<
     {
       name: "skeletons",
       displayName: "Skeletons",
+      accumulator: (time) => {
+        return (get("apprentices") / 12) * time;
+      },
       maximum: (rd) => {
         return rd.get("km2")! * 5 + 5;
       },
@@ -76,7 +79,7 @@ const ResourceDefinitions: Map<string, ResourceDefinition> = new Map<
     {
       name: "gold",
       displayName: "Gold",
-      maximum: 400,
+      maximum: -1,
     },
   ],
   [
@@ -101,8 +104,16 @@ const ResourceDefinitions: Map<string, ResourceDefinition> = new Map<
       name: "apprentices",
       displayName: "Apprentices",
       maximum: (rd) => {
-        return 4;
+        return rd.get("deacons")! * 4 + 4;
       },
+    },
+  ],
+  [
+    "deacons",
+    {
+      name: "deacons",
+      displayName: "Deacons",
+      maximum: 11,
     },
   ],
 ]);

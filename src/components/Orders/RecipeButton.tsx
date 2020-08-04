@@ -3,8 +3,12 @@ import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
 import { OrderButton } from "./styled";
 import { RootState } from "../../reducers/Reducers";
-import { Recipe } from "../../game/Recipes";
-import { tryRecipe, checkRecipeRequirements } from "../../game/Resources";
+import { Recipe, getRecipe } from "../../game/Recipes";
+import {
+  tryRecipe,
+  checkRecipeRequirements,
+  checkWouldRecipeCapOut,
+} from "../../game/Resources";
 import {
   UNLOCK,
   PUT_LOG,
@@ -12,30 +16,34 @@ import {
 } from "../../reducers/Actions";
 
 const RecipeButton = ({
-  recipes,
   tryR,
   recipe,
   onButtonClicked,
   children,
 }: RecipeButtonProps) => {
-  return (
-    <OrderButton
-      disabled={!checkRecipeRequirements(recipes.get(recipe)!)}
-      onClick={() => {
-        tryR(recipes.get(recipe)!);
-        if (onButtonClicked) {
-          onButtonClicked();
-        }
-      }}
-    >
-      {children}
-    </OrderButton>
-  );
+  const r = getRecipe(recipe)!;
+
+  if (r) {
+    return (
+      <OrderButton
+        disabled={!checkRecipeRequirements(r) || checkWouldRecipeCapOut(r)}
+        onClick={() => {
+          tryR(r);
+          if (onButtonClicked) {
+            onButtonClicked();
+          }
+        }}
+      >
+        {children}
+      </OrderButton>
+    );
+  } else {
+    return <OrderButton disabled={true}>recipe {recipe} not found</OrderButton>;
+  }
 };
 
 const mapStateToProps = (state: RootState) => {
   return {
-    recipes: state.recipeDefinitions,
     resourceData: state.resourceData,
     unlocks: state.unlocks,
   };

@@ -4,7 +4,13 @@ import { OrderButton } from "../styled";
 import RecipeButton from "../RecipeButton";
 import { have } from "../../../game/Resources";
 
-const Warfare = ({ unlock, addMany, resourceData, unlocks }: OrdersProps) => {
+const Warfare = ({
+  unlock,
+  addMany,
+  resourceData,
+  unlocks,
+  putLog,
+}: OrdersProps) => {
   return (
     <>
       {unlocks.get("kill with magic") && (
@@ -20,15 +26,23 @@ const Warfare = ({ unlock, addMany, resourceData, unlocks }: OrdersProps) => {
             const skeletonCount = resourceData.get("skeletons")!;
             unlock("unwilling sacrifices");
             unlock("gold");
+            const corpses = (skeletonCount + Math.round(Math.random() * 8)) * 2;
+            const sacrifices = Math.round(
+              skeletonCount / 7 + Math.random() * 4
+            );
+            const gold = Math.round(skeletonCount * 30 * Math.random());
+            const skeletons = -Math.round(Math.random() * skeletonCount);
             addMany([
-              ["corpses", (skeletonCount + Math.round(Math.random() * 8)) * 2],
-              [
-                "unwilling sacrifices",
-                Math.round(skeletonCount / 7 + Math.random() * 4),
-              ],
-              ["gold", Math.round(skeletonCount * 30 * Math.random())],
-              ["skeletons", -Math.round(Math.random() * skeletonCount)],
+              ["corpses", corpses],
+              ["unwilling sacrifices", sacrifices],
+              ["gold", gold],
+              ["skeletons", skeletons],
             ]);
+            putLog(
+              `Your raiding party returned ${Math.round(corpses)} fresh corpses, ${gold} ducats, and sacrificed ${sacrifices} mortals to your glory, at the expense of ${Math.abs(
+                skeletons
+              )} skeletons`
+            );
           }}
         >
           Dispatch raiding party

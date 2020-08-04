@@ -45,7 +45,12 @@ export function add(name: string, num: number, unlock = true) {
     name,
     definition.maximum === 0
       ? currentAmount + num
-      : Math.min(currentAmount + num, definition.maximum),
+      : Math.min(
+          currentAmount + num,
+          typeof definition.maximum === "function"
+            ? definition.maximum(store.getState().resourceData)
+            : definition.maximum
+        ),
     unlock
   );
 }
@@ -68,8 +73,8 @@ export function get(name: string) {
   return 0;
 }
 
-export function getDefinition(name: string) {
-  return store.getState().resourceDefinitions.get(name);
+export function getDefinition(name: string): ResourceDefinition {
+  return ResourceDefinitions.get(name)!;
 }
 
 export function have(name: string, num: number) {
@@ -141,4 +146,22 @@ export function checkRecipeRequirements(recipe: Recipe): boolean {
       : recipe.cost
     ).every(([ingredient, cost]) => have(ingredient, cost))
   );
+}
+
+export function checkWouldRecipeCapOut(recipe: Recipe): boolean {
+  const result = recipe.result!;
+  if (typeof result === "function") {
+    // for the time being, function results will return false until I can figure out a decent way of distinguishing between deterministic and nondeterministic results
+    return false;
+  } else {
+    return result.every(([result, count]) => {
+      const m = getDefinition(result).maximum;
+      const maximum =
+        typeof m === "function" ? m(store.getState().resourceData) : m;
+      if (maximum < 0) {
+        return false;
+      }
+      return have(result, maximum);
+    });
+  }
 }
